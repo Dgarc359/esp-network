@@ -1,10 +1,11 @@
+
 #![no_std]
 #![no_main]
 
 extern crate alloc;
 use core::mem::MaybeUninit;
 use esp_backtrace as _;
-use esp_hal::{clock::ClockControl, peripherals::Peripherals, prelude::*, Delay, IO};
+use esp_hal::{clock::ClockControl, peripherals::Peripherals, prelude::*, Delay, IO, ledc::{timer::config::{Config as TimerConfig},LSGlobalClkSource, channel::{self, ChannelIFace}, LEDC, timer::{self, TimerIFace}, Speed, LowSpeed}};
 use esp_println::println;
 use esp_hal as hal;
 
@@ -27,6 +28,7 @@ fn main() -> ! {
 
     let system = peripherals.SYSTEM.split();
     let clocks = ClockControl::max(system.clock_control).freeze();
+    let mut delay = Delay::new(&clocks);
 
     #[cfg(target_arch = "xtensa")]
     let timer = hal::timer::TimerGroup::new(peripherals.TIMG1, &clocks).timer0;
@@ -41,28 +43,62 @@ fn main() -> ! {
     )
     .unwrap();
 
+
     let wifi = peripherals.WIFI;
     let mut esp_now = esp_wifi::esp_now::EspNow::new(&init, wifi).unwrap();
     let io = IO::new(peripherals.GPIO, peripherals.IO_MUX);
     let mut led = io.pins.gpio0.into_push_pull_output();
+    //let mut motor = io.pins.gpio9;
+
+    let mut ledc = LEDC::new(peripherals.LEDC, &clocks);
+    ledc.set_global_slow_clock(LSGlobalClkSource::APBClk);
+
+
+    let mut lstimer0 = ledc.get_timer::<LowSpeed>(timer::Number::Timer0);
+lstimer0
+    .configure(timer::config::Config {
+        duty: timer::config::Duty::Duty5Bit,
+        clock_source: timer::LSClockSource::APBClk,
+        frequency: esp_hal::prelude::_fugit_RateExtU32::kHz(24),
+    })
+    .unwrap();
+
+    let mut channel0 = ledc.get_channel(channel::Number::Channel0, led);
+channel0
+    .configure(channel::config::Config {
+        timer: &lstimer0,
+        duty_pct: 75,
+        pin_config: channel::config::PinConfig::PushPull,
+    })
+    .unwrap();
+
+    //let mut motor = io.pins.gpio9.into_push_pull_output();
 
     //led.set_high();
 
 
     println!("esp-now version {}", esp_now.get_version().unwrap());
+    //println!("Max duty: {}", channel0.max_duty_cycle());
 
     let mut next_send_time = current_millis() + 5 * 1000;
     loop {
+        channel0.set_duty(50).ok();
+        //delay.delay_ms(250u32);
+        //channel0.set_duty(50).ok();
+        //delay.delay_ms(250u32);
+        //channel0.set_duty(75).ok();
+        //delay.delay_ms(250u32);
         let r = esp_now.receive();
         if let Some(r) = r {
-            println!("Received {:?}", r);
 
             let gotten_bit = r.data[0] & TOGGLE_LED;
             println!("got bit {:?} {:?}", &gotten_bit, TOGGLE_LED);
             if gotten_bit == TOGGLE_LED {
-                led.set_high();
+                //led.set_high();
+                //motor.set_high();
             } else {
-                led.set_low();
+                //led.set_low();
+                //motor.set_low();
             }
 
             if r.info.dst_address == BROADCAST_ADDRESS {
