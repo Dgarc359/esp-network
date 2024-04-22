@@ -5,13 +5,22 @@
 extern crate alloc;
 use core::mem::MaybeUninit;
 use esp_backtrace as _;
-use esp_hal::{clock::ClockControl, peripherals::Peripherals, prelude::*, Delay, IO, ledc::{timer::config::{Config as TimerConfig},LSGlobalClkSource, channel::{self, ChannelIFace}, LEDC, timer::{self, TimerIFace}, Speed, LowSpeed}};
+use esp_hal::{
+    clock::ClockControl,
+    peripherals::Peripherals,
+    prelude::*,
+    delay::Delay,
+    gpio::IO,
+    ledc::{
+        timer::config::{Config as TimerConfig},
+        LSGlobalClkSource, channel::{self, ChannelIFace, Channel},
+        LEDC, timer::{self, TimerIFace}, Speed, LowSpeed}};
 use esp_println::println;
 use esp_hal as hal;
 
 use esp_wifi::{current_millis, initialize, EspWifiInitFor, esp_now::{BROADCAST_ADDRESS, PeerInfo}};
 
-use esp_hal::Rng;
+use esp_hal::rng::Rng;
 mod util;
 
 const TOGGLE_LED: u8 = 1 << 0;
@@ -57,9 +66,9 @@ fn main() -> ! {
     let mut lstimer0 = ledc.get_timer::<LowSpeed>(timer::Number::Timer0);
 lstimer0
     .configure(timer::config::Config {
-        duty: timer::config::Duty::Duty5Bit,
+        duty: timer::config::Duty::Duty14Bit,
         clock_source: timer::LSClockSource::APBClk,
-        frequency: esp_hal::prelude::_fugit_RateExtU32::kHz(24),
+        frequency: esp_hal::prelude::_fugit_RateExtU32::Hz(50),
     })
     .unwrap();
 
@@ -67,7 +76,7 @@ lstimer0
 channel0
     .configure(channel::config::Config {
         timer: &lstimer0,
-        duty_pct: 75,
+        duty_pct: 25,
         pin_config: channel::config::PinConfig::PushPull,
     })
     .unwrap();
@@ -78,16 +87,22 @@ channel0
 
 
     println!("esp-now version {}", esp_now.get_version().unwrap());
-    //println!("Max duty: {}", channel0.max_duty_cycle());
+    //println!("Max duty: {}", &channel0.max_duty_cycle());
 
     let mut next_send_time = current_millis() + 5 * 1000;
     loop {
+        /*
         channel0.set_duty(50).ok();
-        //delay.delay_ms(250u32);
+        delay.delay_ms(2u32);
+        channel0.set_duty(0).ok();
+        delay.delay_ms(2u32);
+        */
         //channel0.set_duty(50).ok();
         //delay.delay_ms(250u32);
         //channel0.set_duty(75).ok();
         //delay.delay_ms(250u32);
+
+        /*
         let r = esp_now.receive();
         if let Some(r) = r {
 
@@ -136,5 +151,6 @@ channel0
             println!("Send broadcast status: {:?}", status)
             */
         }
+        */
     }
 }

@@ -1,0 +1,8 @@
+name: Build
+run-name: ${{ github.actor }} is testing
+on: [push]
+jobs:
+  Explore-CI:
+    runs-on: ubuntu-latest
+    steps:
+      - run: cargo build --release
