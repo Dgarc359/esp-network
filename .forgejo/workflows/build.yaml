@@ -3,6 +3,6 @@ run-name: ${{ github.actor }} is testing
 on: [push]
 jobs:
   Explore-CI:
-    runs-on: ubuntu-latest
+    runs-on: runner
     steps:
       - run: cargo build --release
