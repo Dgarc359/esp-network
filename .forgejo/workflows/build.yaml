@@ -4,8 +4,6 @@ on: [push]
 jobs:
   Explore-CI:
     runs-on: docker
-    container:
-      image: cimg/rust:1.45-node
     steps:
       - uses: actions/checkout@v3
       - name: install rust toolchains
