@@ -1,4 +1,6 @@
+#[allow(unused_imports)]
 use esp_idf_svc::hal::delay::FreeRtos;
+#[allow(unused_imports)]
 use esp_idf_svc::hal::ledc::{
     config::TimerConfig, LedcDriver, LedcTimer, LedcTimerDriver, Resolution,
 };
@@ -20,11 +22,12 @@ fn main() {
     let timer_driver = LedcTimerDriver::new(
         peripherals.ledc.timer0,
         &TimerConfig::default()
-            .frequency(50.Hz().into())
+            .frequency(50.Hz())
             .resolution(Resolution::Bits14),
     )
     .unwrap();
 
+    #[allow(unused_mut, unused_variables)]
     let mut driver = LedcDriver::new(
         peripherals.ledc.channel0,
         timer_driver,
@@ -76,6 +79,7 @@ fn main() {
 }
 
 // Function that maps one range to another
+#[allow(dead_code)]
 fn map(x: u32, in_min: u32, in_max: u32, out_min: u32, out_max: u32) -> u32 {
     (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 }
