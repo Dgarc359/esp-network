@@ -4,5 +4,7 @@ on: [push]
 jobs:
   Explore-CI:
     runs-on: docker
+    container:
+      image: espressif/idf-rust:esp32c3_latest
     steps:
       - run: cargo build --release
