@@ -5,6 +5,6 @@ jobs:
   Explore-CI:
     runs-on: docker
     container:
-      image: espressif/idf-rust:esp32c3_latest
+      image: espressif/idf-rust:esp32c3_1.77.0.0
     steps:
       - run: cargo build --release
