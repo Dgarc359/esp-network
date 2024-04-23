@@ -35,7 +35,6 @@ fn main() {
     )
     .unwrap();
 
-    /*
     let max_duty = driver.get_max_duty();
     println!("max duty {:?}", max_duty);
     let min_limit = max_duty * 25 / 1000;
@@ -75,7 +74,6 @@ fn main() {
         }
     }
     //driver.set_duty(max_duty * 3 / 4);
-    */
 }
 
 // Function that maps one range to another
