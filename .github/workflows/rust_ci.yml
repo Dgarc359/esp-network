@@ -54,4 +54,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: archive
-          path: project.zip
+          path: idf-controller/target/
