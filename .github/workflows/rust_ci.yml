@@ -38,7 +38,7 @@ jobs:
           components: rust-src
       - name: install rust deps
         run: |
-          rustup component add rustfmt
+          rustup component add rustfmt clippy
       - name: install ldproxy
         run: cargo install ldproxy
       - name: Enable caching
