@@ -4,14 +4,10 @@ on: [push]
 jobs:
   Explore-CI:
     runs-on: docker
+    container:
+      image: cimg/rust:1.45-node
     steps:
       - uses: actions/checkout@v3
-      - name: install rust
-        run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-      - name: source cargo
-        run: export PATH="$HOME/.cargo/bin:$PATH"
-      - name: check rust
-        run: which rustc && which cargo
       - name: install rust toolchains
         run: rustup toolchain install nightly --component rust-src
       - name: install llvm
