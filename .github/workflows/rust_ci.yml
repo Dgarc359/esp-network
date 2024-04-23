@@ -36,6 +36,8 @@ jobs:
         with:
           toolchain: nightly
           components: rust-src
+      - name: install ldproxy
+        run: cargo install ldproxy
       - name: Enable caching
         uses: Swatinem/rust-cache@v2
       - name: Run command
