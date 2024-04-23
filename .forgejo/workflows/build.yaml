@@ -9,9 +9,7 @@ jobs:
       - name: install rust
         run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
       - name: source cargo
-        run: |
-          source "$HOME/.cargo/env"
-          export PATH="$HOME/.cargo/bin:$PATH"
+        run: export PATH="$HOME/.cargo/bin:$PATH"
       - name: install rust toolchains
         run: rustup toolchain install nightly --component rust-src
       - name: install llvm
