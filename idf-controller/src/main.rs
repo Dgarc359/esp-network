@@ -1,5 +1,7 @@
 use esp_idf_svc::hal::delay::FreeRtos;
-use esp_idf_svc::hal::ledc::{config::TimerConfig, LedcDriver, LedcTimerDriver, LedcTimer, Resolution};
+use esp_idf_svc::hal::ledc::{
+    config::TimerConfig, LedcDriver, LedcTimer, LedcTimerDriver, Resolution,
+};
 use esp_idf_svc::hal::peripherals::Peripherals;
 use esp_idf_svc::hal::prelude::*;
 
@@ -20,13 +22,15 @@ fn main() {
         &TimerConfig::default()
             .frequency(50.Hz().into())
             .resolution(Resolution::Bits14),
-        )
-        .unwrap();
+    )
+    .unwrap();
 
     let mut driver = LedcDriver::new(
         peripherals.ledc.channel0,
-        timer_driver, peripherals.pins.gpio0).unwrap();
-
+        timer_driver,
+        peripherals.pins.gpio0,
+    )
+    .unwrap();
 
     /*
     let max_duty = driver.get_max_duty();
