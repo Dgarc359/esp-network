@@ -36,6 +36,9 @@ jobs:
         with:
           toolchain: nightly
           components: rust-src
+      - name: install rust deps
+        run: |
+          rustup component add rustfmt
       - name: install ldproxy
         run: cargo install ldproxy
       - name: Enable caching
