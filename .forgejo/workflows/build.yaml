@@ -11,7 +11,7 @@ jobs:
       - name: source cargo
         run: export PATH="$HOME/.cargo/bin:$PATH"
       - name: check rust
-        run: which rust && which cargo
+        run: which rustc && which cargo
       - name: install rust toolchains
         run: rustup toolchain install nightly --component rust-src
       - name: install llvm
