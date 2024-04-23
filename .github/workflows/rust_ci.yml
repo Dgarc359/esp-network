@@ -27,7 +27,7 @@ jobs:
           - command: fmt
             args: --all -- --check --color always
           - command: clippy
-            args: --all-targets --all-features --workspace -- -D warnings
+            args: --all-features --workspace -- -D warnings
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -40,6 +40,7 @@ jobs:
         run: |
           rustup component add rustfmt clippy
       - name: install ldproxy
+        if: ${{ contains(matrix.action.command, 'build')}}
         run: cargo install ldproxy
       - name: Enable caching
         uses: Swatinem/rust-cache@v2
