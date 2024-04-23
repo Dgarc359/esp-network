@@ -48,7 +48,7 @@ jobs:
       - name: check files
         run: ls
       - name: Create zip
-        if: ${{ contains(${{ matrix.action.command }}, 'build')}}
+        if: ${{ contains(matrix.action.command, 'build')}}
         uses: ihiroky/archive-action@v1
         with:
           root_dir: target
