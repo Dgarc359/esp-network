@@ -7,4 +7,5 @@ jobs:
     container:
       image: espressif/idf-rust:esp32c3_1.77.0.0
     steps:
+      - run: cd idf-controller
       - run: cargo build --release
